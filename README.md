@@ -62,7 +62,7 @@ Then update the `.env` file by replacing the existing `DATABASE_URL` value with 
 DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=PRISMA_POSTGRES_API_KEY"
 ```
 
-To ensure your authentication works properly, you'll also need to set [env vars for NextAuth.js](https://next-auth.js.org/configuration/options):
+To ensure your authentication works properly, you'll also need to set [env vars for NextAuth.js](://next-auth.js.org/configuration/optionshttps):
 
 ```bash
 AUTH_SECRET="RANDOM_32_CHARACTER_STRING"
