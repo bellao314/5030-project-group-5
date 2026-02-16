@@ -1,4 +1,4 @@
-interface ProjectCardProps {
+interface CardProps {
   location: string; // Zip Code / Area
   fedFunds: number;
   avgPropertyValue: number;
