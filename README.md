@@ -166,3 +166,7 @@ Once the server is running, visit `http://localhost:3000` to start using the app
 - [Prisma Client API reference](https://www.prisma.io/docs/orm/prisma-client)
 - [Join our Discord community](https://discord.com/invite/prisma)
 - [Follow us on Twitter](https://twitter.com/prisma)
+
+## Map View
+
+After running the app, visit http://localhost:3000/map to see the map view of St. Louis County.
