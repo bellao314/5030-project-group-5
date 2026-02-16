@@ -62,7 +62,7 @@ Then update the `.env` file by replacing the existing `DATABASE_URL` value with 
 DATABASE_URL="prisma+postgres://accelerate.prisma-data.net/?api_key=PRISMA_POSTGRES_API_KEY"
 ```
 
-To ensure your authentication works properly, you'll also need to set [env vars for NextAuth.js](https://next-auth.js.org/configuration/options):
+To ensure your authentication works properly, you'll also need to set [env vars for NextAuth.js](://next-auth.js.org/configuration/optionshttps):
 
 ```bash
 AUTH_SECRET="RANDOM_32_CHARACTER_STRING"
@@ -166,3 +166,7 @@ Once the server is running, visit `http://localhost:3000` to start using the app
 - [Prisma Client API reference](https://www.prisma.io/docs/orm/prisma-client)
 - [Join our Discord community](https://discord.com/invite/prisma)
 - [Follow us on Twitter](https://twitter.com/prisma)
+
+## Map View
+
+After running the app, visit http://localhost:3000/map to see the map view of St. Louis County.
