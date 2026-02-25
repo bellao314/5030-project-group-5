@@ -23,10 +23,22 @@ function App() {
       zoom: 11,
     });
 
+    mapRef.current.addControl(new mapboxgl.NavigationControl());
+
     mapRef.current.on('load', () => {
       mapRef.current.addSource('mo-zip-codes', {
         'type': 'geojson',
         'data': './data/mo_missouri_zip_codes_geo.min.json'
+      });
+
+      mapRef.current.addSource('tornado-polys', {
+        'type': 'vector',
+        'url': 'mapbox://bott003.a96dtqg1'
+      });
+
+      mapRef.current.addSource('tornado-paths', {
+        'type': 'vector',
+        'url': 'mapbox://bott003.2symb3m7'
       });
 
       mapRef.current.addLayer({
@@ -37,6 +49,31 @@ function App() {
         paint: {
           'line-color': 'red',
           'line-width': 1
+        }
+      });
+
+      mapRef.current.addLayer({
+        id: 'tornado-polys',
+        type: 'fill',
+        source: 'tornado-polys',
+        'source-layer': 'damage_polys-89r1fg',
+        paint: {
+          'fill-color': 'red',
+          'fill-opacity': 0.5
+        }
+      });
+
+      mapRef.current.addLayer({
+        id: 'tornado-paths',
+        type: 'line',
+        source: 'tornado-paths',
+        'source-layer': 'damage_paths-7hui0w',
+        layout: {
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': 'red',
+          'line-width': 3
         }
       });
     });
@@ -52,7 +89,7 @@ return (
     <div style={{
         margin: '10px 10px 0 0',
         width: 300,
-        right: 0,
+        right: 50,
         top: 0,
         position: 'absolute',
         zIndex: 10 }}>
