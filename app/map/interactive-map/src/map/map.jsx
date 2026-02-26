@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react'
 import mapboxgl from 'mapbox-gl'
 import { SearchBox } from '@mapbox/search-js-react'
+import InfoCard from '../info-card/card'
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css'
@@ -8,17 +9,24 @@ import './map.css'
 const accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 const center = [-90.288248, 38.655563];
 
-function MapBackground() {
+export default function InteractiveMap() {
 
   const mapRef = useRef()
   const mapContainerRef = useRef()
   const [inputValue, setInputValue] = useState("");
+
+  const [selectedData, setSelectedData] = useState({
+    zipCode: "Select a Zip",
+    fedFunds: 0,
+    propertyValue: 0
+  });
 
   useEffect(() => {
     mapboxgl.accessToken = accessToken
 
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/light-v11",
       center:  center,
       zoom: 11,
     });
@@ -42,18 +50,7 @@ function MapBackground() {
       });
 
       mapRef.current.addLayer({
-        id: 'outline',
-        type: 'line',
-        source: 'mo-zip-codes',
-        layout: {},
-        paint: {
-          'line-color': 'red',
-          'line-width': 1
-        }
-      });
-
-      mapRef.current.addLayer({
-        id: 'tornado-polys',
+        id: 'tornado-polys-layer',
         type: 'fill',
         source: 'tornado-polys',
         'source-layer': 'damage_polys-89r1fg',
@@ -64,7 +61,7 @@ function MapBackground() {
       });
 
       mapRef.current.addLayer({
-        id: 'tornado-paths',
+        id: 'tornado-paths-layer',
         type: 'line',
         source: 'tornado-paths',
         'source-layer': 'damage_paths-7hui0w',
@@ -72,8 +69,43 @@ function MapBackground() {
           'line-cap': 'round'
         },
         paint: {
-          'line-color': 'red',
+          'line-color': 'blue',
           'line-width': 3
+        }
+      });
+
+      mapRef.current.addLayer({
+        id: 'zip-codes',
+        type: 'fill',
+        source: 'mo-zip-codes',
+        paint: {
+          'fill-color': 'gray',
+          'fill-opacity': 0.25,
+          'fill-outline-color': 'black'
+        }
+      });
+
+      mapRef.current.on('mouseenter', 'zip-codes', () => {
+        mapRef.current.getCanvas().style.cursor = 'pointer';
+      });
+
+      mapRef.current.on('mouseleave', 'zip-codes', () => {
+        mapRef.current.getCanvas().style.cursor = '';
+      });
+
+      mapRef.current.on('click', 'zip-codes', (e) => {
+        const features = mapRef.current.queryRenderedFeatures(e.point, {
+          layers: ['zip-codes']
+        });
+
+        if (features.length > 0) {
+          const feature = features[0].properties;
+          
+          setSelectedData({
+            zipCode: feature.ZCTA5CE10 || feature.name || "Unknown",
+            fedFunds: Math.floor(Math.random() * 1000000), // Placeholder logic
+            propertyValue: Math.floor(Math.random() * 500000)
+          });
         }
       });
     });
@@ -86,6 +118,11 @@ function MapBackground() {
 
 return (
   <>
+    <InfoCard 
+      zipCode={selectedData.zipCode}
+      fedFunds={selectedData.fedFunds}
+      propertyValue={selectedData.propertyValue}
+    />
     <div style={{
         margin: '10px 10px 0 0',
         width: 300,
@@ -108,6 +145,4 @@ return (
     <div id='map-container' ref={mapContainerRef} />
   </>
   )
-}
-
-export default MapBackground;
+};

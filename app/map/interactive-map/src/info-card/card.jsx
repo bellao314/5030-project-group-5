@@ -1,50 +1,54 @@
 import React from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const ProjectInfoCard = ({
-  location,
-  fedFunds,
-  avgPropertyValue,
-  chartData
-}) => {
-  
-  // Helper to format numbers as USD currency
-  const formatCurrency = (val) => 
-    new Intl.NumberFormat('en-US', { 
-      style: 'currency', 
-      currency: 'USD', 
-      maximumFractionDigits: 0 
-    }).format(val);
+// Mock data for the prediction chart
+const data = [
+  { year: 2016, value: 150 },
+  { year: 2020, value: 180 },
+  { year: 2024, value: 210 },
+  { year: 2028, value: 245 },
+  { year: 2030, value: 270 },
+];
 
+const InfoCard = ({ zipCode, fedFunds, propertyValue }) => {
   return (
-    <div className="card-container">
-      <header>
-        <p className="subtitle" style={{ color: '#666' }}>{location}</p>
-      </header>
+    <div className="info-card">
+      <h2 className="card-title">Zip Code: {zipCode || 'Select Area'}</h2>
+      
+      <div className="stats-section">
+        <div className="stat-row">
+          <span>Fed. Funds:</span>
+          <span className="stat-value">${fedFunds?.toLocaleString() || '--'}</span>
+        </div>
+        <div className="stat-row">
+          <span>Avg. Property Value:</span>
+          <span className="stat-value">${propertyValue?.toLocaleString() || '--'}</span>
+        </div>
+      </div>
 
-      {/* Financial Info Section */}
-      <section className="stats" style={{ margin: '20px 0' }}>
-        <div className="stat-line">
-          <strong>Fed. Funds: </strong> 
-          {formatCurrency(fedFunds)} 
+      <div className="chart-section">
+        <h3>Prediction Chart</h3>
+        <div style={{ width: '100%', height: 150 }}>
+          <ResponsiveContainer>
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="year" fontSize={10} tickMargin={5} />
+              <YAxis hide={true} />
+              <Tooltip />
+              <Line 
+                type="monotone" 
+                dataKey="value" 
+                stroke="#8884d8" 
+                strokeWidth={2} 
+                dot={{ r: 4 }} 
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
-        <div className="stat-line">
-          <strong>Avg. Property Value: </strong> 
-          {formatCurrency(avgPropertyValue)}
-        </div>
-      </section>
-
-      {/* Chart Section */}
-      <section className="chart-area">
-        <h3 style={{ fontSize: '18px' }}>Prediction Chart</h3>
-        <div className="placeholder-chart" style={{ height: '150px', borderBottom: '1px solid #ccc' }}>
-          {/* Chart logic would go here */}
-          <p style={{ color: '#ccc', paddingTop: '50px', textAlign: 'center' }}>
-            [Line Chart Visualization]
-          </p>
-        </div>
-      </section>
+        <p className="zoom-hint">← Zoom in for more info →</p>
+      </div>
     </div>
   );
 };
 
-export default ProjectInfoCard;
+export default InfoCard;
