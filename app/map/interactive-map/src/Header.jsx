@@ -7,13 +7,13 @@ export default function Header() {
             width: '100%',
             margin: 0,
             padding: '20px 0',
+            maxHeight: '10%'
         }}>
             <h1 style={{
                 color: 'white',
                 paddingLeft: '20px',
-                margin: 0
             }}>
-            STL Emergency ROI Dashboard
+            <strong>STL Emergency Funds ROI Dashboard</strong>
             </h1>
         </header>
     );
