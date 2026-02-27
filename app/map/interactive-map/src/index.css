@@ -1,0 +1,10 @@
+/* Add this to your global CSS file */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+h1 {
+  margin: 0; /* Removes the default spacing around the text */
+}

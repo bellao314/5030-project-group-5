@@ -127,7 +127,6 @@ return (
         margin: '10px 10px 0 0',
         width: 300,
         right: 50,
-        top: 0,
         position: 'absolute',
         zIndex: 10 }}>
         <SearchBox
