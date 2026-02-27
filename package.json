@@ -28,10 +28,12 @@
     "@types/node": "^20",
     "@types/react": "19.2.5",
     "@types/react-dom": "19.2.3",
+    "baseline-browser-mapping": "^2.9.19",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "postcss": "^8",
     "prisma": "^7.4.0",
+    "supabase": "^2.76.10",
     "tailwindcss": "^4.1.17",
     "tsx": "^4.19.2",
     "typescript": "^5"

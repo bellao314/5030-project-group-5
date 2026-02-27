@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "./generated/client"
@@ -13,21 +7,33 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id       String  @id @default(cuid())
-  name     String?
-  email    String  @unique
-  password String
-  posts    Post[]
-}
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model HousingAssistanceOwners {
+  disasterNumber                          BigInt?
+  state                                   String?
+  county                                  String?
+  city                                    String?
+  zipCode                                 String?
+  validRegistrations                      BigInt?
+  averageFemaInspectedDamage              String?
+  totalInspected                          String?
+  totalDamage                             String?
+  noFemaInspectedDamage                   String?
+  femaInspectedDamageBetween1And10000     String?
+  femaInspectedDamageBetween10001And20000 String?
+  femaInspectedDamageBetween20001And30000 String?
+  femaInspectedDamageGreaterThan30000     String?
+  approvedForFemaAssistance               String?
+  totalApprovedIhpAmount                  String?
+  repairReplaceAmount                     String?
+  rentalAmount                            String?
+  otherNeedsAmount                        String?
+  approvedBetween1And10000                String?
+  approvedBetween10001And25000            String?
+  approvedBetween25001AndMax              String?
+  totalMaxGrants                          String?
+  id                                      String?
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String?
-  author    User?    @relation(fields: [authorId], references: [id])
+  @@ignore
 }
