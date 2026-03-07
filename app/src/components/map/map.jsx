@@ -7,6 +7,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css'
 
 const accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+const propertyApiBaseUrl = import.meta.env.VITE_PROPERTY_API_URL || 'http://127.0.0.1:5001';
 const center = [-90.288248, 38.655563];
 
 export default function InteractiveMap() {
@@ -17,9 +18,56 @@ export default function InteractiveMap() {
 
   const [selectedData, setSelectedData] = useState({
     zipCode: "Select a Zip",
-    fedFunds: 0,
-    propertyValue: 0
+    city: "",
+    countyName: "",
+    beforeValue: null,
+    afterValue: null,
+    beforeLabel: "4/30/2025",
+    afterLabel: "5/31/2025",
+    isLoading: false,
+    error: ""
   });
+
+  const loadPropertyValues = async (zipCode) => {
+    setSelectedData((previousData) => ({
+      ...previousData,
+      zipCode,
+      city: "",
+      countyName: "",
+      beforeValue: null,
+      afterValue: null,
+      isLoading: true,
+      error: ""
+    }));
+
+    try {
+      const response = await fetch(`${propertyApiBaseUrl}/property-value/${zipCode}`);
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(payload.error || "Failed to load property data.");
+      }
+
+      setSelectedData({
+        zipCode: payload.zipCode || zipCode,
+        city: payload.city || "",
+        countyName: payload.countyName || "",
+        beforeValue: payload.beforeValue,
+        afterValue: payload.afterValue,
+        beforeLabel: payload.beforeLabel || "4/30/2025",
+        afterLabel: payload.afterLabel || "5/31/2025",
+        isLoading: false,
+        error: ""
+      });
+    } catch (error) {
+      setSelectedData((previousData) => ({
+        ...previousData,
+        zipCode,
+        isLoading: false,
+        error: error.message || "Could not load property data."
+      }));
+    }
+  };
 
   useEffect(() => {
     mapboxgl.accessToken = accessToken
@@ -100,12 +148,19 @@ export default function InteractiveMap() {
 
         if (features.length > 0) {
           const feature = features[0].properties;
-          
-          setSelectedData({
-            zipCode: feature.ZCTA5CE10 || feature.name || "Unknown",
-            fedFunds: Math.floor(Math.random() * 1000000), // Placeholder logic
-            propertyValue: Math.floor(Math.random() * 500000)
-          });
+          const zipCode = feature.ZCTA5CE10 || feature.name || "Unknown";
+
+          if (zipCode === "Unknown") {
+            setSelectedData((previousData) => ({
+              ...previousData,
+              zipCode,
+              isLoading: false,
+              error: "Selected area does not include a ZIP code."
+            }));
+            return;
+          }
+
+          void loadPropertyValues(zipCode);
         }
       });
     });
@@ -120,8 +175,14 @@ return (
   <>
     <InfoCard 
       zipCode={selectedData.zipCode}
-      fedFunds={selectedData.fedFunds}
-      propertyValue={selectedData.propertyValue}
+      city={selectedData.city}
+      countyName={selectedData.countyName}
+      beforeValue={selectedData.beforeValue}
+      afterValue={selectedData.afterValue}
+      beforeLabel={selectedData.beforeLabel}
+      afterLabel={selectedData.afterLabel}
+      isLoading={selectedData.isLoading}
+      error={selectedData.error}
     />
     <div style={{
         margin: '10px 10px 0 0',
